@@ -32,6 +32,7 @@ def test_docker_trace_api_path_detects_expected_starter_failure(tmp_path: Path):
     with urllib.request.urlopen(emit_request, timeout=10) as response:  # noqa: S310
         emitted = json.loads(response.read().decode("utf-8"))
     assert emitted["emitted_spans"] >= 8
+    assert emitted["jaeger_post_success"] is True
 
     trace_file = tmp_path / "fetched.jsonl"
     with urllib.request.urlopen(f"{TRACE_API_URL}/traces/public", timeout=5) as response:  # noqa: S310

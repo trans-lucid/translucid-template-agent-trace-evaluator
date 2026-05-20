@@ -47,7 +47,7 @@ class Handler(BaseHTTPRequestHandler):
             except Exception as exc:  # pragma: no cover - exercised by Docker integration failures
                 self._json(503, {"error": str(exc)})
                 return
-            self._json(200, {"ok": True, "emitted_spans": len(spans)})
+            self._json(200, {"ok": True, "emitted_spans": len(spans), "jaeger_post_success": True})
             return
         self._json(404, {"error": "not_found"})
 
