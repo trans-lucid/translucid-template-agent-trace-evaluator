@@ -1,4 +1,4 @@
-.PHONY: install validate-solution validate-candidate-main-expected-failure validate-docker-integration render scan-safety validate-rendered-smoke validate
+.PHONY: check-render install validate-solution validate-candidate-main-expected-failure validate-docker-integration render scan-safety validate-rendered-smoke validate
 
 install:
 	python3 -m pip install -e candidate[test]
@@ -18,6 +18,9 @@ render:
 scan-safety:
 	python3 tools/scan_safety.py generated/main
 
+check-render:
+	python3 tools/check_render_contract.py
+
 validate-rendered-smoke:
 	bash tools/validate_rendered_smoke.sh
 
@@ -25,6 +28,7 @@ validate:
 	$(MAKE) validate-solution
 	$(MAKE) validate-candidate-main-expected-failure
 	$(MAKE) render
+	$(MAKE) check-render
 	$(MAKE) scan-safety
 	$(MAKE) validate-rendered-smoke
 	$(MAKE) validate-docker-integration
