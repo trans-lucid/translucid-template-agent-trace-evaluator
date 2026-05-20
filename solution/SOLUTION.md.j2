@@ -1,0 +1,6 @@
+# Solution Notes
+
+The reference implementation scores the full trajectory instead of only the final answer.
+
+It checks expected tool coverage and ordering, verifies citation IDs map to observed evidence, detects repeated failed tool-call loops, penalizes missing escalation when escalation is required, and keeps latency/cost as supporting axes. The report writer produces deterministic JSON so automated graders can compare machine-readable output.
+

@@ -1,0 +1,9 @@
+[
+  "final_answer_correct_wrong_tool_path",
+  "correct_tool_path_no_evidence",
+  "repeated_failed_tool_loop",
+  "missing_escalation",
+  "missing_span_fields",
+  "stable_machine_readable_output"
+]
+

@@ -1,0 +1,27 @@
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    ports:
+      - "16686:16686"
+      - "9411:9411"
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: ":9411"
+
+  trace-simulator:
+    image: python:3.12-alpine
+    working_dir: /workspace
+    command: ["python", "simulators/fake_trace_api.py"]
+    volumes:
+      - .:/workspace:ro
+    ports:
+      - "8089:8089"
+    environment:
+      PORT: "8089"
+      JAEGER_ZIPKIN_URL: "http://jaeger:9411/api/v2/spans"
+    depends_on:
+      - jaeger
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8089/healthz', timeout=2).read()"]
+      interval: 2s
+      timeout: 2s
+      retries: 20

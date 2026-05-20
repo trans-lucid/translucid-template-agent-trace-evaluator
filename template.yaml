@@ -1,0 +1,66 @@
+id: agent-trace-evaluator
+title: Agent Trace Evaluator
+area: ai-evals
+language: python
+roles:
+  - AI Engineer
+  - AI Evaluation Engineer
+  - Backend Engineer
+  - Staff Backend
+seniority:
+  - senior
+  - staff
+time_minutes:
+  medium: 60
+  hard: 90
+  staff: 120
+local_environment:
+  required:
+    - python
+    - docker
+    - docker-compose
+  public_services:
+    - name: trace-simulator
+      purpose: local fake agent trace API
+    - name: jaeger
+      purpose: local trace UI and Zipkin-compatible span ingestion
+  no_external_credentials: true
+  no_cloud_calls: true
+evaluation_axes:
+  - trace parsing
+  - trajectory scoring
+  - tool correctness
+  - evidence grounding
+  - loop detection
+  - escalation judgment
+  - report stability
+source_signals:
+  - agent
+  - trace
+  - trajectory
+  - eval
+  - evaluator
+  - tool call
+  - langsmith
+  - opentelemetry
+  - spans
+  - cost
+  - latency
+candidate_expected_failure:
+  - wrong_tool_path_not_penalized
+  - missing_evidence_not_penalized
+  - loop_not_detected
+  - escalation_not_penalized
+hidden_test_strategy:
+  - final answer correct but wrong tool path
+  - correct tool path but no evidence
+  - repeated failed tool loop
+  - escalation required but confident answer
+  - missing span fields do not crash parser
+  - stable machine-readable report
+forbidden_shortcuts:
+  - final-answer-only-score
+  - hardcoded-public-trace-ids
+  - no-report
+  - no-loop-detection
+  - bypass-local-trace-api

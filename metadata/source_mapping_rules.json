@@ -1,0 +1,52 @@
+{
+  "template_id": "agent-trace-evaluator",
+  "positive_signals": [
+    "agent",
+    "agent trace",
+    "trajectory",
+    "tool call",
+    "tool correctness",
+    "eval",
+    "evaluator",
+    "langsmith",
+    "opentelemetry",
+    "span",
+    "trace",
+    "cost",
+    "latency",
+    "escalation",
+    "citation",
+    "evidence"
+  ],
+  "negative_signals": [
+    "pure frontend only",
+    "no agent or tool path",
+    "no backend",
+    "static content site"
+  ],
+  "stack_matches": [
+    "python",
+    "fastapi",
+    "langchain",
+    "openai",
+    "opentelemetry",
+    "postgres",
+    "typescript backend"
+  ],
+  "best_roles": [
+    "AI Engineer",
+    "AI Evaluation Engineer",
+    "Backend Engineer",
+    "Staff Backend"
+  ],
+  "personalization_knobs": [
+    "agent domain",
+    "tool names",
+    "expected tool sequence",
+    "evidence schema",
+    "escalation policy",
+    "cost and latency budgets",
+    "report schema"
+  ]
+}
+

@@ -1,0 +1,16 @@
+{
+  "run_good_refund": {
+    "overall_min": 0.85
+  },
+  "run_wrong_tool_final_correct": {
+    "tool_correctness_max": 0.4
+  },
+  "run_missing_evidence": {
+    "evidence_max": 0.4
+  },
+  "run_tool_loop": {
+    "loop_max": 0.3,
+    "escalation_max": 0.3
+  }
+}
+

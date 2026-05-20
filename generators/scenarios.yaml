@@ -1,0 +1,31 @@
+id: agent-trace-evaluator
+scenarios:
+  medium:
+    traces: 8
+    hidden_cases: 4
+    axes:
+      - final answer
+      - tool correctness
+      - evidence
+  hard:
+    traces: 16
+    hidden_cases: 6
+    axes:
+      - final answer
+      - tool correctness
+      - evidence
+      - loop detection
+      - escalation
+  staff:
+    traces: 28
+    hidden_cases: 9
+    axes:
+      - final answer
+      - tool correctness
+      - evidence
+      - loop detection
+      - escalation
+      - cost
+      - latency
+      - stability
+

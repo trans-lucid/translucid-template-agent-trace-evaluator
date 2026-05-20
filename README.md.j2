@@ -1,0 +1,54 @@
+# Agent Trace Evaluator
+
+You are joining an AI-agent startup. The support agent often gives plausible final answers, but its path can be unsafe: wrong tools, unsupported claims, repeated failed tool loops, confident answers when escalation is required, and hidden cost/latency regressions.
+
+Your task is to build an evaluator that scores the whole run, not just the final answer.
+
+## What You Are Building
+
+- trace parser
+- trajectory scorer
+- tool correctness checks
+- evidence/citation checks
+- loop detection
+- escalation decision scoring
+- final machine-readable report
+
+## Provided
+
+- synthetic agent traces
+- expected public score contracts
+- a local fake trace API and Jaeger trace UI for integration testing
+- public tests
+- starter evaluator code with known production bugs
+
+No external credentials are required. Do not call live model providers or hosted tracing services.
+
+## Main Files To Edit
+
+- `src/trace_schema.py`
+- `src/evaluator.py`
+- `src/metrics.py`
+- `src/report.py`
+- `src/cli.py`
+
+## Commands
+
+```bash
+python -m pip install -e .[test]
+make dev
+make seed
+make generate-traces
+make test
+make test-integration
+make eval
+make clean
+```
+
+## Deliverables
+
+- `results/evaluation_report.json`
+- `results/summary.md`
+- completed `DEBRIEF.md`
+
+Private tests add harder cases around wrong tool paths, missing evidence, tool loops, escalation, missing trace fields, and stable output.
