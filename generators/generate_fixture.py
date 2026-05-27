@@ -6,44 +6,66 @@ import json
 import random
 from pathlib import Path
 
+COUNT_BY_ENTITY = {"low": 3, "medium": 8, "high": 16}
 
-TOOLS = ["lookup_invoice", "issue_refund", "query_status", "lookup_order"]
+
+def load_profile(path: str | None) -> dict:
+    if not path:
+        return {}
+    profile_path = Path(path)
+    if not profile_path.exists():
+        return {}
+    return json.loads(profile_path.read_text())
 
 
-def build_trace(index: int, rng: random.Random) -> dict:
-    invoice_id = f"INV-{1000 + index}"
-    tool = rng.choice(TOOLS)
-    return {
-        "trace_id": f"generated_run_{index:03d}",
-        "task": f"Resolve account issue {invoice_id}",
-        "expected_final_contains": [invoice_id],
-        "expected_tools": [{"name": tool, "args_subset": {"id": invoice_id}}],
-        "requires_evidence": True,
-        "should_escalate": rng.random() < 0.2,
-        "max_latency_ms": 2500,
-        "max_cost_usd": 0.05,
-        "final_answer": f"Handled {invoice_id}.",
-        "latency_ms": rng.randint(800, 4000),
-        "cost_usd": round(rng.uniform(0.01, 0.08), 4),
-        "steps": [
-            {"step_id": "s1", "type": "tool_call", "tool_name": tool, "arguments": {"id": invoice_id}, "status": "ok"},
-            {"step_id": "s2", "type": "observation", "text": f"evidence for {invoice_id}", "evidence_id": f"ev-{invoice_id}"},
-            {"step_id": "s3", "type": "final", "text": f"Handled {invoice_id}.", "citations": [f"ev-{invoice_id}"]},
-        ],
-    }
+def profile_settings(profile: dict, seed: int, count: int) -> tuple[int, int, str, str]:
+    scenario_profile = profile.get("scenario_profile") if isinstance(profile.get("scenario_profile"), dict) else {}
+    if profile:
+        seed = int(profile.get("generator_seed") or seed)
+        count = COUNT_BY_ENTITY.get(str(scenario_profile.get("entity_count", "medium")), count)
+    difficulty = str(profile.get("difficulty") or profile.get("difficulty_profile") or "senior").lower()
+    failure_modes = str(scenario_profile.get("failure_modes", "multi_step"))
+    return seed, count, difficulty, failure_modes
+
+
+def build_rows(template_slug: str, seed: int, count: int, difficulty: str, failure_modes: str) -> list[dict]:
+    rng = random.Random(seed)
+    rows: list[dict] = []
+    for index in range(count):
+        rows.append(
+            {
+                "case_id": f"{template_slug}-{difficulty}-{index:03d}",
+                "difficulty": difficulty,
+                "failure_mode": failure_modes,
+                "severity": "high" if difficulty == "staff" else "medium" if difficulty == "senior" else "low",
+                "entity_id": f"entity_{rng.randint(1000, 9999)}",
+                "requires_operator_report": difficulty in {"senior", "staff"},
+                "adversarial": difficulty == "staff",
+            }
+        )
+    return rows
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--seed", type=int, default=20260519)
+    parser.add_argument("--scenario", choices=["public", "hidden"], default="public")
+    parser.add_argument("--seed", type=int, default=20260520)
     parser.add_argument("--count", type=int, default=8)
+    parser.add_argument("--profile")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
-    rng = random.Random(args.seed)
+
+    profile = load_profile(args.profile)
+    seed, count, difficulty, failure_modes = profile_settings(profile, args.seed, args.count)
+    template_slug = profile.get("template_slug") or Path.cwd().name
+    rows = build_rows(str(template_slug), seed, count, difficulty, failure_modes)
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text("\n".join(json.dumps(build_trace(i, rng), sort_keys=True) for i in range(args.count)) + "\n")
+    if args.out.suffix == ".jsonl":
+        args.out.write_text("\n".join(json.dumps(row, sort_keys=True) for row in rows) + "\n")
+    else:
+        args.out.write_text(json.dumps(rows, indent=2, sort_keys=True) + "\n")
+    print(f"wrote {len(rows)} generated personalization cases to {args.out}")
 
 
 if __name__ == "__main__":
     main()
-
