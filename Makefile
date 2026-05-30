@@ -1,4 +1,4 @@
-.PHONY: validate-personalization check-render install validate-solution validate-candidate-main-expected-failure validate-docker-integration render scan-safety validate-rendered-smoke validate
+.PHONY: validate-personalization check-render check-published-repo install validate-solution validate-candidate-main-expected-failure validate-docker-integration render scan-safety validate-rendered-smoke validate
 
 install:
 	python3 -m pip install -e candidate[test]
@@ -21,6 +21,9 @@ scan-safety:
 check-render:
 	python3 tools/check_render_contract.py
 
+check-published-repo:
+	python3 tools/check_published_repo_contract.py --candidate-dir generated/main --solution-dir generated/solution --manifest translucid-template.json
+
 validate-rendered-smoke:
 	bash tools/validate_rendered_smoke.sh
 
@@ -32,7 +35,9 @@ validate:
 	$(MAKE) validate-candidate-main-expected-failure
 	$(MAKE) render
 	$(MAKE) check-render
+	$(MAKE) check-published-repo
 	$(MAKE) scan-safety
 	$(MAKE) validate-personalization
+	$(MAKE) check-published-repo
 	$(MAKE) validate-rendered-smoke
 	$(MAKE) validate-docker-integration
