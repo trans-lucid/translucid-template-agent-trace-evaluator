@@ -35,7 +35,7 @@ No external credentials are required. Do not call live model providers or hosted
 ## Commands
 
 ```bash
-python -m pip install -e .[test]
+make setup
 make dev
 make seed
 make generate-traces
@@ -51,4 +51,4 @@ make clean
 - `results/summary.md`
 - completed `DEBRIEF.md`
 
-Private tests add harder cases around wrong tool paths, missing evidence, tool loops, escalation, missing trace fields, and stable output.
+Additional evaluation checks may add harder cases around wrong tool paths, missing evidence, tool loops, escalation, missing trace fields, and stable output.

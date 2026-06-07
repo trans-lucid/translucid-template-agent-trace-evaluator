@@ -31,7 +31,7 @@ No external credentials are required. Do not call live model providers, LangSmit
 ## Commands
 
 ```bash
-python -m pip install -e .[test]
+make setup
 make dev
 make seed
 make generate-traces
@@ -47,4 +47,4 @@ make clean
 - `results/summary.md`
 - completed `DEBRIEF.md`
 
-Private tests add harder cases around tool path, evidence, loops, escalation, missing fields, and stable output.
+Additional evaluation checks may add harder cases around tool path, evidence, loops, escalation, missing fields, and stable output.

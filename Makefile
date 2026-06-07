@@ -1,4 +1,4 @@
-.PHONY: validate-personalization check-render check-published-repo install validate-solution validate-candidate-main-expected-failure validate-docker-integration render scan-safety validate-rendered-smoke validate
+.PHONY: validate-personalization check-render check-published-repo install validate-solution validate-candidate-main-expected-failure validate-docker-integration validate-published-contract render scan-safety validate-rendered-smoke validate
 
 install:
 	python3 -m pip install -e candidate[test]
@@ -11,6 +11,9 @@ validate-candidate-main-expected-failure:
 
 validate-docker-integration:
 	bash tools/expect_candidate_docker_failure.sh
+
+validate-published-contract:
+	python3 tools/validate_published_repo_contract.py
 
 render:
 	python3 tools/render_template.py
@@ -41,3 +44,4 @@ validate:
 	$(MAKE) check-published-repo
 	$(MAKE) validate-rendered-smoke
 	$(MAKE) validate-docker-integration
+	$(MAKE) validate-published-contract

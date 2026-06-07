@@ -11,7 +11,7 @@ def target_root() -> Path:
     if env_target:
         return Path(env_target).resolve()
     cwd = Path.cwd()
-    if cwd.name in {"candidate", "main", "solution"}:
+    if (cwd / "src").is_dir():
         return cwd
     return cwd / "candidate"
 
